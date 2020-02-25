@@ -7,10 +7,10 @@ class App extends React.Component {
 
     state = {
         data: null,
-        sortType: undefined,
+        sortType: null,
     };
 
-
+    //Получаем данные с jsonplaceholder
     componentDidMount() {
         setTimeout(() => {
             fetch('https://jsonplaceholder.typicode.com/users')
@@ -22,6 +22,7 @@ class App extends React.Component {
         }, 3000)
 };
 
+    //Сортируем по имени
     sortByAuthorName = () =>{
         const sort = this.state.data.sort((a, b) =>{ if (a.name > b.name) {
             return 1;
@@ -31,9 +32,10 @@ class App extends React.Component {
         }
         return 0;});
 
-        this.setState({data: sort})
+        this.setState({data: sort, sortType: 'byName'})
     };
 
+    //Сортируем по Зип-коду
     sortByZipCode = () =>{
         const sort = this.state.data.sort((a, b) =>{ if (a.address.zipcode > b.address.zipcode) {
             return 1;
@@ -42,10 +44,16 @@ class App extends React.Component {
                 return -1;
             }
             return 0;});
-
-        this.setState({data: sort})
+        this.setState({data: sort, sortType: 'byZip'})
     };
 
+    //Удаление Карточки нажатием на
+    removeCard = (e) => {
+        console.log(e);
+        const filter = this.state.data.filter(user => user.id !== e);
+       this.setState({data: filter})
+    };
+    //Отрисовываем компоненты
     render()
 {
     const {data} = this.state;
@@ -53,7 +61,7 @@ class App extends React.Component {
         <div className="App">
             <Header funcSortName={this.sortByAuthorName} funcSortZipCode={this.sortByZipCode}/>
             {data ? data.map(i => {
-                    return <Card user={i} key={i.id}/>
+                    return <Card user={i} key={i.id} removeCard={this.removeCard.bind(null,i.id)}/>
                 })
                 : 'Loading...'
             }
@@ -61,5 +69,6 @@ class App extends React.Component {
     );
 }
 }
+
 
 export default App;
