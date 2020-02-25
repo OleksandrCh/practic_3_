@@ -13,6 +13,7 @@ class App extends React.Component {
     //Получаем данные с jsonplaceholder
     componentDidMount() {
         setTimeout(() => {
+
             fetch('https://jsonplaceholder.typicode.com/users')
                 .then(response => response.json())
                 .then(result => {
