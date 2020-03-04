@@ -2,12 +2,14 @@ import React from 'react';
 import './App.css';
 import Header from "./components/header/Header";
 import Card from "./components/card/Card";
+import userEvent from "@testing-library/user-event";
 
 class App extends React.Component {
 
     state = {
         data: null,
         sortType: null,
+        status: true,
     };
 
     //Получаем данные с jsonplaceholder
@@ -16,6 +18,11 @@ class App extends React.Component {
             fetch('https://jsonplaceholder.typicode.com/users')
                 .then(response => response.json())
                 .then(result => {
+                    result = result.map(user => {
+                            user.visible = true;
+                            return user
+                        }
+                    );
                     console.log(result);
                     this.setState({data: result})
                 })
@@ -36,7 +43,6 @@ class App extends React.Component {
 
         this.setState({data: sort, sortType: 'byName'})
     };
-
 
     //Сортируем по Зип-коду
     sortByZipCode = () => {
@@ -59,14 +65,24 @@ class App extends React.Component {
         this.setState({data: filter})
     };
 
+    hideShow = (id) => {
+        const newData = this.state.data.map(user => {
+           (id === user.id && user.visible === true) ? user.visible = false : user.visible = true;
+           return user;
+        });
+        this.setState({data: newData});
+    };
+
     //Отрисовываем компоненты
     render() {
-        const {data} = this.state;
+        const {data,status} = this.state;
+
         return (
             <div className="App">
                 <Header funcSortName={this.sortByAuthorName} funcSortZipCode={this.sortByZipCode}/>
                 {data ? data.map(i => {
-                        return <Card user={i} key={i.id} removeCard={this.removeCard.bind(null, i.id)}/>
+                        return <Card user={i} key={i.id} status={status} hideShow={this.hideShow}
+                                     removeCard={this.removeCard.bind(null, i.id)}/>
                     })
                     : 'Loading...'
                 }
