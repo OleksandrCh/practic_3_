@@ -10,7 +10,7 @@ function Card({user,removeCard,hideShow}) {
                 </div>}
                 <span className="btn btn-primary m-1" onClick={removeCard}>Remove Me</span>
                 <span className="btn btn-primary m-1" onClick={hideShow.bind(null, user.id)}>{user.visible ? "Hide" : "Show"}</span>
-                <span className="btn btn-primary m-1" onClick={true}>Remove Me</span>
+                {/*<span className="btn btn-primary m-1" onClick={true}>Remove Me</span>*/}
             </div>
         </div>
     );

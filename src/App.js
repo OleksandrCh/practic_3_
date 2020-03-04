@@ -2,14 +2,13 @@ import React from 'react';
 import './App.css';
 import Header from "./components/header/Header";
 import Card from "./components/card/Card";
-import userEvent from "@testing-library/user-event";
-import CardInform from "./components/card_inform/CardInform";
 
 class App extends React.Component {
 
     state = {
         data: null,
         sortType: null,
+        url: "https://cepia.ru/images/u/pages/skachat-koshek-cover-1706.jpg",
     };
 
     //Получаем данные с jsonplaceholder
@@ -25,7 +24,7 @@ class App extends React.Component {
                     );
                     this.setState({data: result})
                 })
-        }, 3000)
+        }, 3000);
     };
 
     //Сортируем по имени
