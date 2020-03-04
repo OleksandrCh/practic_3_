@@ -3,13 +3,13 @@ import './App.css';
 import Header from "./components/header/Header";
 import Card from "./components/card/Card";
 import userEvent from "@testing-library/user-event";
+import CardInform from "./components/card_inform/CardInform";
 
 class App extends React.Component {
 
     state = {
         data: null,
         sortType: null,
-        status: true,
     };
 
     //Получаем данные с jsonplaceholder
@@ -23,7 +23,6 @@ class App extends React.Component {
                             return user
                         }
                     );
-                    console.log(result);
                     this.setState({data: result})
                 })
         }, 3000)
@@ -46,7 +45,7 @@ class App extends React.Component {
 
     //Сортируем по Зип-коду
     sortByZipCode = () => {
-        const sort = this.state.data.sort((a, b) => {
+        let sort = this.state.data.sort((a, b) => {
             if (a.address.zipcode > b.address.zipcode) {
                 return 1;
             }
@@ -65,6 +64,7 @@ class App extends React.Component {
         this.setState({data: filter})
     };
 
+    // Прячет и показывает содержимое карты
     hideShow = (id) => {
         const newData = this.state.data.map(user => {
            (id === user.id && user.visible === true) ? user.visible = false : user.visible = true;
