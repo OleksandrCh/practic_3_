@@ -2,29 +2,29 @@ import React from 'react';
 import './App.css';
 import Header from "./components/header/Header";
 import Card from "./components/card/Card";
+import AddCard from "./components/addCard/AddCard";
 
 class App extends React.Component {
 
     state = {
         data: null,
         sortType: null,
-        url: "https://cepia.ru/images/u/pages/skachat-koshek-cover-1706.jpg",
     };
 
     //Получаем данные с jsonplaceholder
     componentDidMount() {
-        setTimeout(() => {
-            fetch('https://jsonplaceholder.typicode.com/users')
-                .then(response => response.json())
-                .then(result => {
-                    result = result.map(user => {
-                            user.visible = true;
-                            return user
-                        }
-                    );
-                    this.setState({data: result})
-                })
-        }, 3000);
+
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => response.json())
+            .then(result => {
+                this.addVisible(result);
+                this.setState({data: result})
+            })
+
+    };
+
+    addVisible = (data) => {
+        data.map(user => user.visible = true);
     };
 
     //Сортируем по имени
@@ -58,7 +58,6 @@ class App extends React.Component {
 
     //Удаление Карточки нажатием на
     removeCard = (e) => {
-        console.log(e);
         const filter = this.state.data.filter(user => user.id !== e);
         this.setState({data: filter})
     };
@@ -66,25 +65,34 @@ class App extends React.Component {
     // Прячет и показывает содержимое карты
     hideShow = (id) => {
         const newData = this.state.data.map(user => {
-           (id === user.id && user.visible === true) ? user.visible = false : user.visible = true;
-           return user;
+            (id === user.id && user.visible === true) ? user.visible = false : user.visible = true;
+            return user;
         });
         this.setState({data: newData});
     };
 
+    // Добавляет новую карту
+    addCard = (value) => {
+        value.id = this.state.data.length + 1;
+        value.visible=true;
+        const newData = [...this.state.data, value];
+       // this.addVisible(newData);
+        this.setState({data: newData})
+    };
+
     //Отрисовываем компоненты
     render() {
-        const {data,status} = this.state;
-
+        const {data, status, url} = this.state;
         return (
             <div className="App">
                 <Header funcSortName={this.sortByAuthorName} funcSortZipCode={this.sortByZipCode}/>
                 {data ? data.map(i => {
-                        return <Card user={i} key={i.id} status={status} hideShow={this.hideShow}
+                        return <Card user={i} key={i.id} url={url} status={status} hideShow={this.hideShow}
                                      removeCard={this.removeCard.bind(null, i.id)}/>
                     })
                     : 'Loading...'
                 }
+                <AddCard addCard={this.addCard}/>
             </div>
         );
     }
