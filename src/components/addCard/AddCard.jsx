@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-function AddCard(props) {
+function AddCard({editChange, addCard}) {
+    const [id, setId] = useState();
     const [name, setName] = useState();
     const [username, setUserName] = useState();
     const [phone, setPhone] = useState();
@@ -9,25 +10,42 @@ function AddCard(props) {
     const onchangeUseName = (e) => setUserName(e.target.value);
     const onchangePhone = (e) => setPhone(e.target.value);
     const onchangeZipCode = (e) => setZipCode(e.target.value);
-    const user = {name: name, username: username, phone: phone, address: {zipcode: zipCode}};
+    let user = {id: id, name: name, username: username, phone: phone, address: {zipcode: zipCode}};
+
+    useEffect(() => {
+        setId(editChange.id);
+        setName(editChange.name);
+        setUserName(editChange.username);
+        setPhone(editChange.phone);
+        setZipCode(editChange.address.zipcode);
+    }, [editChange]);
+
+    const handler = (value) => {
+        addCard(value);
+        setId('');
+        setName('');
+        setUserName('');
+        setPhone('');
+        setZipCode('');
+    };
 
     return (
         <div className="card" style={{width: '19rem', float: 'left', height: '21rem'}}>
-            <div className="card-body">
-                <div>Name:
+            <div className="card-body d-flex flex-column">
+                <div className=' d-flex justify-content-between'><span>Name:</span>
                     <input type='text' className="card-title" value={name} onChange={onchangeName}/>
                 </div>
-                <div>User Name:
+                <div className=' d-flex justify-content-between'><span>User Name:</span>
                     <input type='text' className="card-title" value={username} onChange={onchangeUseName}/>
                 </div>
-                <div>Phone:
+                <div className=' d-flex justify-content-between'><span>Phone:</span>
                     <input type='text' className="card-title" value={phone} onChange={onchangePhone}/>
                 </div>
-                <div> Zip-Code
+                <div className=' d-flex justify-content-between'><span>Zip-Code</span>
                     <input type='text' className="card-title" value={zipCode} onChange={onchangeZipCode}/>
                 </div>
-                <span className="btn btn-primary m-1" onClick={props.addCard.bind(null, user
-                )}>Add Card</span>
+                <span className="btn btn-primary m-1" onClick={handler.bind(null, user)}>Add Card</span>
+                {/*<span className="btn btn-primary m-1" onClick={change}>Change Edit Card</span>*/}
             </div>
         </div>
     );
